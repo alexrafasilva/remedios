@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atualizar Remédio</title>
+</head>
+<body>
+    <h1>Atualizar Remédio</h1>
+    
+    <!-- Formulário para atualizar remédio -->
+    <form method="POST">
+        <label for="horario">Horário (HH:MM):</label>
+        <input type="time" id="horario" name="horario" value="{{ remedio.horario }}" required>
+
+        <label for="remedio">Nome do Remédio:</label>
+        <input type="text" id="remedio" name="remedio" value="{{ remedio.remedio }}" required>
+
+        <button type="submit">Atualizar</button>
+    </form>
+</body>
+</html>

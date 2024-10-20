@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alarme de Remédios</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Alarme de Remédios</h1>
+    
+    <!-- Formulário para adicionar remédios -->
+    <form method="POST">
+        <label for="horario">Horário (HH:MM):</label>
+        <input type="time" id="horario" name="horario" required>
+
+        <label for="remedio">Nome do Remédio:</label>
+        <input type="text" id="remedio" name="remedio" required>
+
+        <button type="submit">Adicionar</button>
+    </form>
+
+    <h2>Remédios Agendados</h2>
+    <ul>
+        {% for remedio in remedios %}
+            <li>
+                {{ remedio.horario }} - {{ remedio.remedio }}
+                <!-- Botões de Ação -->
+                <form action="/remover/{{ loop.index0 }}" method="POST" style="display:inline;">
+                    <button type="submit">Remover</button>
+                </form>
+                <a href="/atualizar/{{ loop.index0 }}">Atualizar</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        // Função para usar Web Speech API para falar no navegador
+        function falar(texto) {
+            const synth = window.speechSynthesis;
+            const utterThis = new SpeechSynthesisUtterance(texto);
+            synth.speak(utterThis);
+        }
+
+        // Função para checar se o alarme deve tocar
+        function checkAlarm() {
+            fetch('/check_alarm')
+            .then(response => response.json())
+            .then(data => {
+                if (data.alarme) {
+                    // Fala o nome do remédio e a hora
+                    falar(`Agora são ${data.horario}. Hora de tomar O ${data.remedio}.`);
+                }
+            })
+            .catch(error => console.error('Erro ao checar alarme:', error));
+        }
+
+        // Verifica a cada 60 segundos se o alarme deve tocar
+        setInterval(checkAlarm, 60000); // 60 segundos
+    </script>
+</body>
+</html>
